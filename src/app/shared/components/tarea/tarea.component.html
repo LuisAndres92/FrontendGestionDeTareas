@@ -1,0 +1,83 @@
+<div 
+    class="bg-gray-600/50 text-white p-2 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 ease-in-out hover:border-white border-2 border-transparent flex gap-2 justify-between items-center group"
+>
+    <form [formGroup]="formularioTarea" (ngSubmit)="editarTarea()" class="flex flex-col gap-2 flex-grow">
+        <div class="flex items-center gap-2">
+            <!-- Checkbox para marcar la tarea como completada -->
+            <input 
+                type="checkbox" 
+                formControlName="estadoTarea" 
+                class="rounded-full cursor-pointer" 
+                (click)="cambiarEstadoTarea()" 
+            />
+
+            @if (editar) {
+
+                <!-- Contenido de la tarea -->
+                <div class="flex flex-col gap-1 flex-grow transition-all duration-300 ease-in-out">
+                    <!-- Título de la tarea -->
+                    <input 
+                        formControlName="titulo" 
+                        type="text" 
+                        [readonly]="!editar"
+                        placeholder="Título"
+                        class="text-lg font-semibold w-full  border-1 rounded-md border-gray-400/50 focus:border-white outline-none px-1  focus:ring-1 focus:ring-white transition-all duration-300"
+                        [ngClass]="{'border-red-500': this.formularioTarea.get('titulo')?.invalid && (this.formularioTarea.get('titulo')?.touched)}"
+                    />
+                    
+                    <!-- Descripción de la tarea -->
+                    <textarea 
+                        formControlName="descripcion" 
+                        [readonly]="!editar"
+                        placeholder="Descripción"
+                        rows="3"
+                        class="text-white/80 text-sm w-full resize-none custom-scroll border-1 rounded-md border-gray-400/50 focus:border-white outline-none px-1 focus:ring-1 focus:ring-white transition-all duration-300"
+                        [ngClass]="{'border-red-500': this.formularioTarea.get('descripcion')?.invalid && (this.formularioTarea.get('descripcion')?.touched)}"
+                    ></textarea>
+                    
+                </div>
+
+                <!-- Botones de opciones -->
+                <div class="flex flex-col gap-1 ">
+                    <!-- Botón de Gardar -->
+                    <button type="submit" class="cursor-pointer p-1 rounded-full hover:bg-gray-500/30 transition-all duration-200" title="Guardar">
+                        <app-validar-icono />
+                    </button>
+
+                    <!-- Botón de Cancelar -->
+                    <button type="button" class="cursor-pointer p-1 rounded-full hover:bg-gray-500/30 transition-all duration-200" (click)="cancelarEdicion()" title="Cancelar">
+                        <app-cerrar-icono />
+                    </button>
+                </div>
+            }
+        </div>
+
+        
+    </form>
+
+
+
+    <!-- Botones de opciones -->
+    @if (!editar) {
+
+        <div class="flex flex-col justify-start gap-1 w-full transition-all duration-300 ease-in-out">
+            <h3 class="text-lg px-1 borber-1 font-semibold">{{ tarea.titulo }}</h3>
+            <p class="text-white/80 borber-1 px-1 text-sm">{{ tarea.descripcion }}</p>
+        </div>
+
+        <!-- Botones de eliminar y editar -->
+        <div 
+            class="flex flex-col gap-1 sm:opacity-0 sm:translate-y-2 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-300 ease-out"
+        >
+            <!-- Botón de eliminar -->
+            <button class="cursor-pointer p-1 rounded-full hover:bg-gray-500/30 transition-all duration-200" (click)="eliminarTarea()" title="Eliminar">
+                <app-eliminar-icono />
+            </button>
+
+            <!-- Botón de editar -->
+            <button class="cursor-pointer p-1 rounded-full hover:bg-gray-500/30 transition-all duration-200" (click)="mostrarOcultarFormulario()" title="Editar">
+                <app-editar-icono />
+            </button>
+        </div>
+    }
+</div>

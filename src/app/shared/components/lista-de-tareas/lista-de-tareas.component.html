@@ -1,0 +1,73 @@
+<div class="flex flex-col gap-2 bg-black w-64 p-4 rounded-xl transition-all duration-300 ease-in-out  ">
+    
+    <div class="flex justify-between items-center">
+        @if (editar) {
+            <form [formGroup]="formularioListaDeTareas" class="flex gap-2" (ngSubmit)="editarListaDeTareas()">
+                <!-- Campo para el título -->
+                <input 
+                type="text" 
+                formControlName="titulo" 
+                placeholder="Introduzca el título de la lista..." 
+                class="w-full text-white bg-gray-600/50 border-1 rounded-sm border-gray-400/60 focus:border-white outline-none p-1 text-md focus:ring-1 focus:ring-white transition-all duration-300"
+                [ngClass]="{'border-red-500': campoInvalido('titulo')}"
+                />
+
+                <!-- Botones de acción -->
+                <div class="flex  gap-1 ">
+                    <!-- Botón de Gardar -->
+                    <button type="submit" class="cursor-pointer p-1 rounded-full hover:bg-gray-500/30 transition-all duration-200" title="Guardar">
+                        <app-validar-icono />
+                    </button>
+
+                    <!-- Botón de Cancelar -->
+                    <button type="button" class="cursor-pointer p-1 rounded-full hover:bg-gray-500/30 transition-all duration-200" (click)="cancelarEdicion()" title="Cancelar">
+                        <app-cerrar-icono />
+                    </button>
+                </div>
+            </form>
+        }@else {
+            <h2 class="text-white text-md font-bold">{{ ListaDeTareas.titulo }}</h2>
+
+            <div class="flex gap-1">
+                
+
+                <button class="cursor-pointer p-1 rounded-full hover:bg-gray-500/30 transition-all duration-200" (click)="eliminarListaDeTareas()" title="Eliminar">
+                    <app-eliminar-icono />
+                </button>
+    
+                <button class="cursor-pointer p-1 rounded-full hover:bg-gray-500/30 transition-all duration-200" (click)="mostraroOcultarFormulario()" title="Editar">
+                    <app-editar-icono />
+                </button>
+            </div>
+        }
+
+    </div>
+    <div class="flex flex-col gap-2">
+        <div class="flex gap-1 items-center justify-end">
+            <app-filtro-icono />
+            <select class="cursor-pointer p-1 rounded-full bg-gray-700 text-white border-none outline-none px-2" (change)="filtrarTareas($event)">
+                @for (filtro of this.listaDeFiltros; track $index) {
+                    <option value="{{ filtro }}">{{ filtro }}</option>
+                }
+            </select>
+        </div>
+
+        <ul class="flex flex-col gap-2">
+            @for (tarea of ListaDeTareas.tareas; track tarea.id) {
+                <li>
+                    <app-tarea
+                        [tarea]="tarea"
+                        [idListaDeTareas]="ListaDeTareas.id"
+                        (tareaActualizada)="actualizarTarea($event)"
+                        (tareaEliminada)="eliminarTarea($event)"
+                        (estadoCambiado)="cambiarEstadoTarea(tarea.id, $event)" />
+                </li>
+            }
+        </ul>
+    </div>
+    
+
+    <app-agregar-tarea 
+        (tareaAgregada)="agregarTareaAListaDeTareas($event)"
+    />
+</div>
